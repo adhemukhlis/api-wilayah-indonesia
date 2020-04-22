@@ -13,8 +13,8 @@ class PageProvinsi extends Component {
 		const { provinsi } = this.state;
 		return (
 			<div style={Container}>
-				<h1>Provinsi</h1>
-				<TableContent col_label="Provinsi" data_content={provinsi} row_key={PathDic.provinsi} link_key={PathDic.wilayah}/>
+				<h1 style={{color:'#222'}}>Provinsi</h1>
+				<TableContent col_label="Provinsi" data_content={provinsi} row_key={PathDic.provinsi} link_key={'wilayah'}/>
 			</div>
 		)
 	}

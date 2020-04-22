@@ -10,7 +10,7 @@ Layanan API wilayah Indonesia :
 ## Struktur Data
 API ini menggunakan layanan *Firebase Database* dengan struktur:
 
-```yml
+```jsx
 //root
 {
 	wilayah: {
@@ -44,6 +44,10 @@ API ini menggunakan layanan *Firebase Database* dengan struktur:
 	}
 }
 ```
+live JSON demo : 
+https://api-wilayah-indonesia-firebase.firebaseio.com/.json?orderBy=%22$key%22&equalTo=%22_wilayah%22&print=pretty
+
+*tetap gunakan node "wilayah" saat production, node "_wilayah" hanya menampilhan beberapa data*
 
 
 ## Penggunaan
@@ -53,24 +57,24 @@ Ada beberapa cara untuk menggunakan API ini
 ### Firebase Database
 
 firebase *config* :
-```
+``` jsx
 const  config  = {
 	databaseURL: "https://api-wilayah-indonesia-firebase.firebaseio.com"
 };
 firebase.initializeApp(config)
 ```
 #### firebase root
-```
+``` jsx
 const  rootRef  =  firebase.database( ).ref( ).child( 'wilayah' );
 ```
 #### GET
-```
+``` jsx
 const  refProvinsi  =  rootRef.child( 'provinsi' );
 const  refKabupatenKota  =  rootRef.child( 'kabupaten_kota' );
 const  refKecamatan  =  rootRef.child( 'kecamatan' );
 const  refKelurahan  =  rootRef.child( 'desa_kelurahan' );
 
-refProvinsi.once("value", data  => {
+const getAllProvinsi =()=> refProvinsi.once("value", data  => {
 	let  arr  = [ ];
 	data.forEach(val  => {
 		arr.push(val.val( ))
@@ -80,40 +84,49 @@ refProvinsi.once("value", data  => {
 	console.log(arr);
 })
 
-refKabupatenKota.orderByChild( 'id_provinsi' ).equalTo( ':id_provinsi:' ).once("value", data  => {
+const getAllKabKot =(id_provinsi)=> refKabupatenKota.orderByChild( 'id_provinsi' ).equalTo( id_provinsi ).once("value", data  => {
 	let  arr  = [ ];
 	data.forEach(val  => {
-	arr.push(val.val( ))
+		arr.push(val.val( ))
+	});
+	// arr => array Kabupaten dan Kota
+	//[{id,name},{id,name},...]
+	console.log(arr);
 });
 
-refKecamatan.orderByChild( 'id_kabupaten_kota' ).equalTo( ':id_kabupaten_kota:' ).once("value", data  => {
+const getAllKecamatan =(id_kabkot)=> refKecamatan.orderByChild( 'id_kabupaten_kota' ).equalTo( id_kabkot ).once("value", data  => {
 	let  arr  = [ ];
 	data.forEach(val  => {
-	arr.push(val.val( ))
+		arr.push(val.val( ))
+	});
+	// arr => array Kecamatan
+	//[{id,name},{id,name},...]
+	console.log(arr);
 });
-refKelurahan.orderByChild( 'id_kecamatan' ).equalTo( ':id_kecamatan:' ).once("value", data  => {
+
+const getAllKelurahan =(id_kecamatan)=> refKelurahan.orderByChild( 'id_kecamatan' ).equalTo( id_kecamatan ).once("value", data  => {
 	let  arr  = [ ];
 	data.forEach(val  => {
-	arr.push(val.val( ))
+		arr.push(val.val( ))
+	});
+	// arr => array Kelurahan
+	//[{id,name},{id,name},...]
+	console.log(arr);
 });
 
-
-});
-refProvinsi.child( ":id_provinsi:" ).once("value", data  => {
+const getProvinsi =(id_provinsi)=> refProvinsi.child( id_provinsi ).once("value", data  => {
 	console.log( data.val( ).name )
 });
 
-refKabupatenKota.child( ":id_kabupaten_kota:" ).once("value", data  => {
+const getKabkot =(id_kabkot)=> refKabupatenKota.child( id_kabkot ).once("value", data  => {
 	console.log( data.val( ).name )
 });
 
-refKecamatan.child( ":id_kecamatan:" ).once("value", data  => {
+const getKecamatan =(id_kecamatan)=> refKecamatan.child( id_kecamatan ).once("value", data  => {
 	console.log( data.val( ).name )
 });
 
-refKelurahan.child( ":id_desa_kelurahan:" ).once("value", data  => {
+const getKelurahan =(id_kelurahan)=> refKelurahan.child( id_kelurahan ).once("value", data  => {
 	console.log( data.val( ).name )
 });
-
-
 ```
